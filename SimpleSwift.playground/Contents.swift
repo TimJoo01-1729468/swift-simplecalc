@@ -1,11 +1,103 @@
+import Foundation
+
 print("Welcome to the UW Calculator Playground")
 
-func calculate(_ args: [String]) -> Int {
-    return -1
+// initial calculate function for an array of String
+func calculate(_ arg: [String]) -> Int {
+    var str = ""
+    for char in arg { // Converting from Array to a String.
+        let newChar = char + " "
+        str += newChar
+    }
+    return calculate(str) // Calling back the calculate function with a string to do all the work there.
 }
 
+// Final caclulate function that does all the work with going through each character in each string
+// to calculate the values in the given way as requested by the user.
 func calculate(_ arg: String) -> Int {
-    return -1
+    var value = 0
+    if arg.contains("+") { // checking for addition
+        for char in arg {
+            if let validNumber = Int(String(char)) {
+                value += validNumber
+            }
+        }
+    } else if arg.contains("-") { // checking for subtraction
+        for char in arg {
+            if let validNumber = Int(String(char)) {
+                value -= validNumber
+            }
+        }
+        if value < 0 {
+            value = 0
+        }
+    } else if arg.contains("/") { // checking for division
+        var firstNumber = 1
+        for char in arg {
+            if let validNumber = Int(String(char)) {
+                if validNumber == Int(String(arg.prefix(1))) {
+                    firstNumber = validNumber
+                }
+                value = validNumber
+            }
+        }
+        value = firstNumber / value
+    } else if arg.contains("*") { // checking for multiplication
+        value = 1
+        for char in arg {
+            if let validNumber = Int(String(char)) {
+                value *= validNumber
+            }
+        }
+    } else if arg.contains("%") { // checking for modulo
+        var firstNumber = 1
+        for char in arg {
+            if let validNumber = Int(String(char)) {
+                if validNumber == Int(String(arg.prefix(1))) {
+                    firstNumber = validNumber
+                }
+                value = validNumber
+            }
+        }
+        value = firstNumber % value
+    } else if arg.contains("count") { // checking for count
+        for char in arg {
+            if Int(String(char)) != nil {
+                value += 1
+            }
+        }
+    } else if arg.contains("avg") { // checking for average
+        var count = 0
+        for char in arg {
+            if let validNumber = Int(String(char)) {
+                value += validNumber
+                count += 1
+            }
+        }
+        if count > 0 {
+            value = value / count
+        } else {
+            value = 0
+        }
+    } else if arg.contains("fact") { // checking for the factorial
+        value = 1
+        var newNum = 0
+        var numCount = 0
+        for char in arg {
+            if let validNumber = Int(String(char)) {
+                newNum = validNumber
+                numCount += 1
+            }
+        }
+        if numCount == 0 {
+            value = 0
+        } else if newNum > 0 {
+            for n in 1...newNum {
+                value = value * n
+            }
+        }
+    }
+    return value // giving the final value from the if statements
 }
 
 // -------------------------------------------
@@ -18,6 +110,7 @@ calculate(["2", "-", "2"]) == 0
 calculate(["2", "*", "2"]) == 4
 calculate(["2", "/", "2"]) == 1
 calculate(["2", "%", "2"]) == 0
+calculate(["4", "%", "3"]) == 1 // added one more modulo to double check my work.
 
 calculate(["1", "2", "3", "count"]) == 3
 calculate(["1", "2", "3", "4", "5", "count"]) == 5
